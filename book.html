@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Appointment — LS Customs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="brand">
+      <div class="brand-mark"><span></span></div>
+      <div class="brand-name">LS <span class="yellow">CUSTOMS</span></div>
+      <div class="brand-est mono">EST. 2019</div>
+    </div>
+
+    <nav class="nav-links mono">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#schedule">Schedule</a>
+      <a href="index.html#about">About</a>
+    </nav>
+
+    <div class="nav-right">
+      <a href="login.html" class="login-link mono">Login</a>
+      <a href="book.html" class="btn btn-yellow">+ Book Appointment</a>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </div>
+</header>
+
+<main class="booking-page">
+  <div class="container">
+    <div class="booking-head">
+      <p class="auth-eyebrow mono">Schedule a service</p>
+      <h1>Book Appointment</h1>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-step active" data-step="1">
+        <div class="progress-dot">01</div>
+        <div class="progress-label mono">Vehicle</div>
+      </div>
+      <div class="progress-step" data-step="2">
+        <div class="progress-dot">02</div>
+        <div class="progress-label mono">Service</div>
+      </div>
+      <div class="progress-step" data-step="3">
+        <div class="progress-dot">03</div>
+        <div class="progress-label mono">Schedule</div>
+      </div>
+      <div class="progress-step" data-step="4">
+        <div class="progress-dot">04</div>
+        <div class="progress-label mono">Confirm</div>
+      </div>
+    </div>
+
+    <div class="booking-panel">
+
+      <section class="booking-screen" data-screen="1">
+        <h2 class="booking-step-title">Pick your vehicle</h2>
+        <p class="booking-step-sub">Tell us if it's a sedan, SUV, or motorcycle. We size the job to the iron.</p>
+        <div class="option-grid" id="vehicleOptions">
+          <div class="option-card" data-value="Sedan">
+            <div class="opt-title">Sedan</div>
+            <div class="opt-sub">Compact / Midsize</div>
+          </div>
+          <div class="option-card" data-value="SUV">
+            <div class="opt-title">SUV</div>
+            <div class="opt-sub">Crossover / Pickup</div>
+          </div>
+          <div class="option-card" data-value="Motorcycle">
+            <div class="opt-title">Motorcycle</div>
+            <div class="opt-sub">All sizes</div>
+          </div>
+        </div>
+        <p class="booking-error mono" id="error1">Pick a vehicle type to continue.</p>
+        <div class="booking-nav">
+          <span></span>
+          <button class="btn btn-yellow" data-next="2">Continue &rarr;</button>
+        </div>
+      </section>
+
+      <section class="booking-screen" data-screen="2" hidden>
+        <h2 class="booking-step-title">Choose a service</h2>
+        <p class="booking-step-sub">Select one or more from our menu.</p>
+        <div class="service-select-grid" id="serviceOptions">
+          <div class="service-select-card" data-value="Auto Care" data-price="3500">
+            <span class="service-select-name">Auto Care</span>
+            <span class="service-select-price">&#8369;3,500+</span>
+          </div>
+          <div class="service-select-card" data-value="Core Fix" data-price="4000">
+            <span class="service-select-name">Core Fix</span>
+            <span class="service-select-price">&#8369;4,000+</span>
+          </div>
+          <div class="service-select-card" data-value="Vehicle Mod" data-price="23000">
+            <span class="service-select-name">Vehicle Mod</span>
+            <span class="service-select-price">&#8369;23,000+</span>
+          </div>
+          <div class="service-select-card" data-value="Body Work" data-price="25000">
+            <span class="service-select-name">Body Work</span>
+            <span class="service-select-price">&#8369;25,000+</span>
+          </div>
+        </div>
+        <p class="booking-error mono" id="error2">Pick at least one service to continue.</p>
+        <div class="booking-nav">
+          <button class="btn btn-outline" data-back="1">&larr; Back</button>
+          <button class="btn btn-yellow" data-next="3">Continue &rarr;</button>
+        </div>
+      </section>
+
+      <section class="booking-screen" data-screen="3" hidden>
+        <h2 class="booking-step-title">Set your schedule</h2>
+        <p class="booking-step-sub">Mon–Fri: 8 AM – 9 PM | Sat: 8 AM – 5 PM. Sunday's closed.</p>
+
+        <div class="booking-field">
+          <label>Date</label>
+          <input type="date" id="bookingDate">
+        </div>
+
+        <div class="booking-field">
+          <label>Time slot</label>
+          <div class="slot-grid" id="slotGrid"></div>
+        </div>
+
+        <p class="booking-error mono" id="error3">Pick a date and time slot to continue.</p>
+        <div class="booking-nav">
+          <button class="btn btn-outline" data-back="2">&larr; Back</button>
+          <button class="btn btn-yellow" data-next="4">Continue &rarr;</button>
+        </div>
+      </section>
+
+      <section class="booking-screen" data-screen="4" hidden>
+        <h2 class="booking-step-title">Confirm & pay</h2>
+        <p class="booking-step-sub">Review the details, choose how you'll pay.</p>
+
+        <div class="summary-list" id="summaryList"></div>
+
+        <div class="booking-field">
+          <label>Payment method</label>
+          <div class="pay-grid" id="payOptions">
+            <div class="option-card" data-value="GCash"><div class="opt-title">GCash</div></div>
+            <div class="option-card" data-value="Maya"><div class="opt-title">Maya</div></div>
+            <div class="option-card" data-value="Cash"><div class="opt-title">Cash</div></div>
+          </div>
+        </div>
+
+        <p class="booking-error mono" id="error4">Pick a payment method to confirm.</p>
+        <div class="booking-nav">
+          <button class="btn btn-outline" data-back="3">&larr; Back</button>
+          <button class="btn btn-yellow" id="confirmBtn">Confirm Booking</button>
+        </div>
+      </section>
+
+      <section class="booking-screen confirm-screen" data-screen="done" hidden>
+        <div class="confirm-badge">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h2 class="booking-step-title">You're booked</h2>
+        <p class="booking-step-sub">We'll see you then. Save your reference number.</p>
+        <div class="confirm-code" id="confirmCode"></div>
+        <div class="summary-list" id="confirmSummary"></div>
+        <a href="index.html" class="btn btn-outline">Back to Home</a>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>&copy; 2026 LS Customs. Pasay City, PH. Est. 2019.</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="booking.js"></script>
+</body>
+</html>

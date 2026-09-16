@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join the Crew — LS Customs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+
+<main class="auth-main">
+  <div class="auth-card">
+    <p class="auth-eyebrow mono">REGISTRATION</p>
+    <h1>Join The Crew</h1>
+    <p class="auth-sub mono">Track your builds. Book services. Access your history.</p>
+
+    <div class="auth-panel">
+      <form>
+        <div class="field-row">
+          <div class="field">
+            <label>Name</label>
+            <div class="field-input-wrap">
+              <input type="text" name="first_name" placeholder="FIRST NAME" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <div class="field-input-wrap">
+              <input type="text" name="last_name" placeholder="LAST NAME" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <div class="field-input-wrap">
+            <input type="email" name="email" placeholder="ENTER EMAIL" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="field-input-wrap">
+            <input type="password" name="password" placeholder="ENTER PASSWORD" required>
+            <button type="button" class="field-toggle mono">Show</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Confirm Password</label>
+          <div class="field-input-wrap">
+            <input type="password" name="confirm_password" placeholder="CONFIRM PASSWORD" required>
+            <button type="button" class="field-toggle mono">Show</button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit">Sign Up &rarr;</button>
+      </form>
+
+      <p class="auth-switch mono">Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+</main>
+
+<footer class="auth-footer">
+  <p>&copy; 2026 LS CUSTOMS — Pasay City, PH</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
