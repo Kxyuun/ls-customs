@@ -41,7 +41,7 @@ Everything above runs entirely in the browser. There's no database and no server
 
 - **Backend / database** — bookings aren't saved anywhere real. See `BACKEND.md` for exactly where to plug this in.
 - **Real photos and icons** — current images are placeholders (clearly labeled, e.g. "AUTO CARE"). Trust-badge icons are real SVGs but generic; swap for final assets before submission.
-- **Auth** — login/signup forms validate input shape but don't check against real accounts yet.
+- **Auth** — login/signup forms validate input shape but don't check against real accounts yet. Three roles are planned: customer, staff, admin. See `AUTH.md` for the full breakdown and what each role can/can't do.
 - **Dead-end buttons** — none left after the booking flow was added, but double check as more pages get built.
 
 ## How to run it
@@ -60,5 +60,6 @@ ls-customs/
 ├── script.js         shared JS (nav, password toggle, signup check)
 ├── booking.js        booking flow logic
 ├── BACKEND.md         instructions for whoever builds the backend
+├── AUTH.md            login/roles plan (customer, staff, admin)
 └── README.md          this file
 ```
