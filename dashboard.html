@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — LS Customs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-page">
+
+<header class="dashboard-topbar">
+  <div class="container">
+    <div class="brand">
+      <div class="brand-mark"><span></span></div>
+      <div class="brand-name">LS <span class="yellow">CUSTOMS</span></div>
+    </div>
+
+    <div class="role-switch mono">
+      <span class="demo-flag">Demo mode &mdash; no backend yet</span>
+      <span>Viewing as</span>
+      <select id="roleSwitch">
+        <option value="staff">Staff</option>
+        <option value="admin">Admin</option>
+      </select>
+      <a href="staff-login.html" class="login-link">Log out</a>
+    </div>
+  </div>
+</header>
+
+<main class="dashboard-main">
+  <div class="container">
+    <h1 class="dashboard-title">Bookings</h1>
+    <p class="dashboard-sub mono">Everything currently scheduled. Update a status as work happens.</p>
+
+    <div class="booking-table-wrap">
+      <table class="booking-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Service(s)</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="bookingRows"></tbody>
+      </table>
+    </div>
+
+    <section class="admin-panel" id="adminPanel" hidden>
+      <div class="admin-panel-title">
+        <span>Manage Staff Accounts</span>
+        <span class="admin-only-tag mono">Admin Only</span>
+      </div>
+
+      <div id="staffList"></div>
+
+      <form class="add-staff-form" id="addStaffForm">
+        <input type="text" id="newStaffName" placeholder="STAFF NAME" required>
+        <input type="email" id="newStaffEmail" placeholder="EMAIL" required>
+        <select id="newStaffRole">
+          <option value="staff">Staff</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button type="submit" class="btn btn-yellow" style="padding:10px 20px;">Add</button>
+      </form>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>&copy; 2026 LS Customs. Pasay City, PH. Est. 2019.</p>
+</footer>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

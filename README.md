@@ -4,6 +4,10 @@ Auto shop website — Pasay City, PH. Course project.
 
 Dark theme, yellow/red accents, "Laging Sira? We Can Fix It!" — Los Santos Customs inspired.
 
+## Staff/Admin access
+
+`staff-login.html` is not linked anywhere on the public site — open it directly by filename (`staff-login.html` in your project folder, or `yoursite.com/staff-login.html` once hosted). Any email/password works right now since there's no real backend yet. It logs you into `dashboard.html`, where a "Viewing as: Staff / Admin" dropdown up top lets you preview both roles.
+
 ## What's built right now
 
 ### Pages
@@ -13,6 +17,8 @@ Dark theme, yellow/red accents, "Laging Sira? We Can Fix It!" — Los Santos Cus
 | `login.html` | Login form (email + password) |
 | `signup.html` | Registration form (name, email, password, confirm password) |
 | `book.html` | 4-step booking flow — this is the main interactive piece |
+| `staff-login.html` | Login for staff/admin accounts — not linked anywhere in the public nav, direct URL only |
+| `dashboard.html` | Staff/admin dashboard — every booking, status updates, admin-only staff account management |
 
 ### Shared files
 | File | What it is |
@@ -20,6 +26,8 @@ Dark theme, yellow/red accents, "Laging Sira? We Can Fix It!" — Los Santos Cus
 | `style.css` | All styling for every page. One shared stylesheet, no page has its own styles. |
 | `script.js` | Runs on every page — mobile nav toggle, password show/hide buttons, basic signup validation |
 | `booking.js` | Only runs on `book.html` — the booking flow logic |
+| `staff-login.js` | Runs on `staff-login.html` — handles the login form |
+| `dashboard.js` | Runs on `dashboard.html` — mock bookings, status changes, role toggle, staff account management |
 
 ## What actually works (no backend needed)
 
@@ -34,6 +42,7 @@ Dark theme, yellow/red accents, "Laging Sira? We Can Fix It!" — Los Santos Cus
   3. Pick a date and time slot — **this has actual logic**: pick a Sunday and it tells you we're closed, pick a Saturday and slots only go to 5 PM, weekdays go to 9 PM
   4. Review a summary, pick a payment method, confirm
   5. Get a booking reference number and a confirmation screen
+- **Staff/admin dashboard (`dashboard.html`)** — go there via `staff-login.html` (not linked publicly, direct URL only). Shows every booking with a status dropdown you can actually change (Pending / In Progress / Ready for Pickup / Completed). There's a "Viewing as: Staff / Admin" dropdown in the top bar for demo purposes only — switching it to Admin reveals a staff account management panel (add/remove staff, assign roles). Once real auth exists, that dropdown goes away and the role comes from the login token instead.
 
 Everything above runs entirely in the browser. There's no database and no server yet — closing the tab loses the booking.
 
