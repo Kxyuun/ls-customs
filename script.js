@@ -22,10 +22,30 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  var nameFields = document.querySelectorAll('#signupFirstName, #signupLastName');
+  nameFields.forEach(function (input) {
+    input.addEventListener('input', function () {
+      this.value = this.value.replace(/[^A-Za-z\s'-]/g, '');
+    });
+  });
+
   var authForm = document.querySelector('.auth-panel form');
   if (authForm) {
     authForm.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      var nameRule = /^[A-Za-z\s'-]+$/;
+      var firstName = document.getElementById('signupFirstName');
+      var nameError = document.getElementById('signupNameError');
+
+      if (firstName && nameError) {
+        var lastName = document.getElementById('signupLastName');
+        if (!nameRule.test(firstName.value) || !nameRule.test(lastName.value)) {
+          nameError.classList.add('show');
+          return;
+        }
+        nameError.classList.remove('show');
+      }
 
       var pass = authForm.querySelector('input[name="password"]');
       var confirm = authForm.querySelector('input[name="confirm_password"]');

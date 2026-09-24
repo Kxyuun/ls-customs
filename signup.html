@@ -20,21 +20,21 @@
           <div class="field">
             <label>Name</label>
             <div class="field-input-wrap">
-              <input type="text" name="first_name" placeholder="FIRST NAME" maxlength="30" required>
+              <input type="text" name="first_name" id="signupFirstName" placeholder="FIRST NAME" maxlength="25" pattern="[A-Za-z\s'-]+" required>
             </div>
           </div>
           <div class="field">
             <label>&nbsp;</label>
             <div class="field-input-wrap">
-              <input type="text" name="last_name" placeholder="LAST NAME" maxlength="30" required>
+              <input type="text" name="last_name" id="signupLastName" placeholder="LAST NAME" maxlength="25" pattern="[A-Za-z\s'-]+" required>
             </div>
           </div>
         </div>
-
+        <p class="booking-error mono" id="signupNameError">Names can only contain letters.</p>
         <div class="field">
           <label>Email</label>
           <div class="field-input-wrap">
-            <input type="email" name="email" id="signupEmail" placeholder="ENTER EMAIL" maxlength="50" required>
+            <input type="email" name="email" id="signupEmail" placeholder="ENTER EMAIL" maxlength="40" required>
           </div>
         </div>
 
