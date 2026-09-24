@@ -30,11 +30,11 @@ document.addEventListener('DOMContentLoaded', function () {
       var pass = authForm.querySelector('input[name="password"]');
       var confirm = authForm.querySelector('input[name="confirm_password"]');
       var passwordError = document.getElementById('signupPasswordError');
-      var passwordRule = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,64}$/;
+      var passwordRule = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/;
 
       if (confirm) {
         if (!passwordRule.test(pass.value)) {
-          passwordError.textContent = 'Password must be 8-64 characters with at least one letter and one number.';
+          passwordError.textContent = 'Password must be 8-32 characters with at least one letter and one number.';
           passwordError.classList.add('show');
           return;
         }

@@ -47,7 +47,7 @@ Dark theme, yellow/red accents, "Laging Sira? We Can Fix It!" — Los Santos Cus
 - **Consultation option** — a 5th "service" in the booking flow for anyone who doesn't know what they need; goes through the same flow as a normal service, just marked "Free / To be discussed"
 - **Service info modal** — each service card on the homepage has a "What's Included" button that pops up a checklist of what's actually covered
 - **Email OTP signup** — signup now has a 2-step flow (fill form → enter 6-digit code) before the account is created. Fully faked right now (see `BACKEND.md` for what the real version needs)
-- **Field validation** — password fields require 8-64 characters with at least one letter and one number, enforced with a real error message, not just the browser's default popup
+- **Field validation** — password fields require 8-32 characters with at least one letter and one number, enforced with a real error message, not just the browser's default popup
 - **Advance booking limit** — booking flow only lets you pick a date up to 30 days out
 - **Blocked-date demo** — a few fake "fully booked" dates are hardcoded in `booking.js` to demonstrate the UI; real version needs this driven by actual booking counts once there's a database
 

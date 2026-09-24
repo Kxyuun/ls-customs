@@ -20,13 +20,13 @@
           <div class="field">
             <label>Name</label>
             <div class="field-input-wrap">
-              <input type="text" name="first_name" placeholder="FIRST NAME" required>
+              <input type="text" name="first_name" placeholder="FIRST NAME" maxlength="30" required>
             </div>
           </div>
           <div class="field">
             <label>&nbsp;</label>
             <div class="field-input-wrap">
-              <input type="text" name="last_name" placeholder="LAST NAME" required>
+              <input type="text" name="last_name" placeholder="LAST NAME" maxlength="30" required>
             </div>
           </div>
         </div>
@@ -34,26 +34,26 @@
         <div class="field">
           <label>Email</label>
           <div class="field-input-wrap">
-            <input type="email" name="email" id="signupEmail" placeholder="ENTER EMAIL" required>
+            <input type="email" name="email" id="signupEmail" placeholder="ENTER EMAIL" maxlength="50" required>
           </div>
         </div>
 
         <div class="field">
           <label>Password</label>
           <div class="field-input-wrap">
-            <input type="password" name="password" id="signupPassword" placeholder="ENTER PASSWORD" minlength="8" maxlength="64" required>
+            <input type="password" name="password" id="signupPassword" placeholder="ENTER PASSWORD" minlength="8" maxlength="32" required>
             <button type="button" class="field-toggle mono">Show</button>
           </div>
-          <p class="field-hint mono">8-64 characters, at least one letter and one number.</p>
+          <p class="field-hint mono">8-32 characters, at least one letter and one number.</p>
         </div>
 
         <div class="field">
           <label>Confirm Password</label>
           <div class="field-input-wrap">
-            <input type="password" name="confirm_password" id="signupConfirmPassword" placeholder="CONFIRM PASSWORD" minlength="8" maxlength="64" required>
+            <input type="password" name="confirm_password" id="signupConfirmPassword" placeholder="CONFIRM PASSWORD" minlength="8" maxlength="32" required>
             <button type="button" class="field-toggle mono">Show</button>
           </div>
-          <p class="booking-error mono" id="signupPasswordError">Password must be 8-64 characters with at least one letter and one number.</p>
+          <p class="booking-error mono" id="signupPasswordError">Password must be 8-32 characters with at least one letter and one number.</p>
         </div>
 
         <button type="submit" class="auth-submit">Send Verification Code &rarr;</button>
