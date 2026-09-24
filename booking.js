@@ -19,6 +19,26 @@ document.addEventListener('DOMContentLoaded', function () {
   var today = new Date();
   dateInput.min = today.toISOString().split('T')[0];
 
+  var maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 30);
+  dateInput.max = maxDate.toISOString().split('T')[0];
+
+  var fullyBookedDates = getDemoFullyBookedDates();
+  var dateHint = document.getElementById('dateHint');
+  if (dateHint) {
+    dateHint.textContent = 'Currently full: ' + fullyBookedDates.join(', ');
+  }
+
+  function getDemoFullyBookedDates() {
+    var dates = [];
+    for (var i = 3; i <= 5; i++) {
+      var d = new Date();
+      d.setDate(d.getDate() + i);
+      dates.push(d.toISOString().split('T')[0]);
+    }
+    return dates;
+  }
+
   vehicleOptions.querySelectorAll('.option-card').forEach(function (card) {
     card.addEventListener('click', function () {
       vehicleOptions.querySelectorAll('.option-card').forEach(function (c) {
@@ -50,6 +70,11 @@ document.addEventListener('DOMContentLoaded', function () {
   function buildSlots() {
     slotGrid.innerHTML = '';
     if (!dateInput.value) return;
+
+    if (fullyBookedDates.indexOf(dateInput.value) !== -1) {
+      slotGrid.innerHTML = '<p class="mono" style="color:#ff6b6b; font-size:11px;">Fully booked that day. Pick another date.</p>';
+      return;
+    }
 
     var day = new Date(dateInput.value + 'T00:00:00').getDay();
     if (day === 0) {
@@ -209,6 +234,11 @@ document.addEventListener('DOMContentLoaded', function () {
     return booking.services.reduce(function (sum, s) { return sum + s.price; }, 0);
   }
 
+  function formatTotal() {
+    var total = totalPrice();
+    return total === 0 ? 'To be discussed' : '\u20B1' + total.toLocaleString() + '+';
+  }
+
   function renderSummary() {
     var list = document.getElementById('summaryList');
     var serviceNames = booking.services.map(function (s) { return s.name; }).join(', ');
@@ -217,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
       summaryRow('Services', serviceNames) +
       summaryRow('Date', booking.date) +
       summaryRow('Time', booking.slot) +
-      summaryRow('Estimated Total', '\u20B1' + totalPrice().toLocaleString() + '+');
+      summaryRow('Estimated Total', formatTotal());
   }
 
   function summaryRow(label, value) {
@@ -226,6 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function showConfirmation(referenceCode) {
     document.getElementById('confirmCode').textContent = referenceCode;
+    lastReferenceCode = referenceCode;
 
     var serviceNames = booking.services.map(function (s) { return s.name; }).join(', ');
     document.getElementById('confirmSummary').innerHTML =
@@ -234,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
       summaryRow('Date', booking.date) +
       summaryRow('Time', booking.slot) +
       summaryRow('Payment', booking.payment) +
-      summaryRow('Estimated Total', '\u20B1' + totalPrice().toLocaleString() + '+');
+      summaryRow('Estimated Total', formatTotal());
 
     document.querySelectorAll('.booking-screen').forEach(function (screen) {
       screen.hidden = screen.dataset.screen !== 'done';
@@ -244,4 +275,47 @@ document.addEventListener('DOMContentLoaded', function () {
       el.classList.remove('active');
     });
   }
+
+  var lastReferenceCode = null;
+
+  document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+    var jsPDFLib = window.jspdf.jsPDF;
+    var doc = new jsPDFLib();
+    var serviceNames = booking.services.map(function (s) { return s.name; }).join(', ');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.text('LS Customs — Booking Confirmation', 20, 25);
+
+    doc.setDrawColor(200);
+    doc.line(20, 30, 190, 30);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+
+    var lines = [
+      ['Reference Code', lastReferenceCode],
+      ['Vehicle', booking.vehicle],
+      ['Service(s)', serviceNames],
+      ['Date', booking.date],
+      ['Time', booking.slot],
+      ['Payment Method', booking.payment],
+      ['Estimated Total', totalPrice() === 0 ? 'To be discussed' : 'PHP ' + totalPrice().toLocaleString() + '+']
+    ];
+
+    var y = 45;
+    lines.forEach(function (row) {
+      doc.setFont('helvetica', 'bold');
+      doc.text(row[0] + ':', 20, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(String(row[1]), 80, y);
+      y += 10;
+    });
+
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text('LS Customs — Pasay City, PH. Est. 2019.', 20, y + 10);
+
+    doc.save(lastReferenceCode + '.pdf');
+  });
 });

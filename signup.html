@@ -14,8 +14,8 @@
     <h1>Join The Crew</h1>
     <p class="auth-sub mono">Track your builds. Book services. Access your history.</p>
 
-    <div class="auth-panel">
-      <form>
+    <div class="auth-panel" id="signupFormScreen">
+      <form id="signupForm">
         <div class="field-row">
           <div class="field">
             <label>Name</label>
@@ -34,30 +34,52 @@
         <div class="field">
           <label>Email</label>
           <div class="field-input-wrap">
-            <input type="email" name="email" placeholder="ENTER EMAIL" required>
+            <input type="email" name="email" id="signupEmail" placeholder="ENTER EMAIL" required>
           </div>
         </div>
 
         <div class="field">
           <label>Password</label>
           <div class="field-input-wrap">
-            <input type="password" name="password" placeholder="ENTER PASSWORD" required>
+            <input type="password" name="password" id="signupPassword" placeholder="ENTER PASSWORD" minlength="8" maxlength="64" required>
             <button type="button" class="field-toggle mono">Show</button>
           </div>
+          <p class="field-hint mono">8-64 characters, at least one letter and one number.</p>
         </div>
 
         <div class="field">
           <label>Confirm Password</label>
           <div class="field-input-wrap">
-            <input type="password" name="confirm_password" placeholder="CONFIRM PASSWORD" required>
+            <input type="password" name="confirm_password" id="signupConfirmPassword" placeholder="CONFIRM PASSWORD" minlength="8" maxlength="64" required>
             <button type="button" class="field-toggle mono">Show</button>
           </div>
+          <p class="booking-error mono" id="signupPasswordError">Password must be 8-64 characters with at least one letter and one number.</p>
         </div>
 
-        <button type="submit" class="auth-submit">Sign Up &rarr;</button>
+        <button type="submit" class="auth-submit">Send Verification Code &rarr;</button>
       </form>
 
       <p class="auth-switch mono">Already have an account? <a href="login.html">Login</a></p>
+    </div>
+
+    <div class="auth-panel" id="otpScreen" hidden>
+      <p class="mono" style="color: var(--text-dim); font-size: 12px; margin-bottom: 20px;">
+        We sent a 6-digit code to <span id="otpEmailTarget" style="color: var(--yellow);"></span>.
+      </p>
+
+      <div class="field">
+        <label>Verification Code</label>
+        <div class="field-input-wrap">
+          <input type="text" id="otpInput" placeholder="000000" maxlength="6" inputmode="numeric">
+        </div>
+        <p class="field-hint mono" id="otpDemoHint"></p>
+      </div>
+
+      <p class="booking-error mono" id="otpError">That code doesn't match. Try again.</p>
+
+      <button type="button" class="auth-submit" id="verifyOtpBtn">Verify &amp; Create Account</button>
+
+      <p class="auth-switch mono">Didn't get it? <a href="#" id="resendOtpLink">Resend code</a></p>
     </div>
   </div>
 </main>
@@ -67,5 +89,6 @@
 </footer>
 
 <script src="script.js"></script>
+<script src="signup-otp.js"></script>
 </body>
 </html>

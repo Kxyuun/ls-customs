@@ -103,7 +103,12 @@
             <span class="service-select-name">Body Work</span>
             <span class="service-select-price">&#8369;25,000+</span>
           </div>
+          <div class="service-select-card" data-value="Not Sure? Get a Consultation" data-price="0">
+            <span class="service-select-name">Not Sure? Get a Consultation</span>
+            <span class="service-select-price">Free</span>
+          </div>
         </div>
+        <p class="booking-step-sub" style="margin-top:14px; margin-bottom:0;">Don't know what your car needs? Pick Consultation and we'll figure it out with you on-site.</p>
         <p class="booking-error mono" id="error2">Pick at least one service to continue.</p>
         <div class="booking-nav">
           <button class="btn btn-outline" data-back="1">&larr; Back</button>
@@ -113,11 +118,12 @@
 
       <section class="booking-screen" data-screen="3" hidden>
         <h2 class="booking-step-title">Set your schedule</h2>
-        <p class="booking-step-sub">Mon–Fri: 8 AM – 9 PM | Sat: 8 AM – 5 PM. Sunday's closed.</p>
+        <p class="booking-step-sub">Mon–Fri: 8 AM – 9 PM | Sat: 8 AM – 5 PM. Sunday's closed. Bookings open up to 30 days ahead.</p>
 
         <div class="booking-field">
           <label>Date</label>
           <input type="date" id="bookingDate">
+          <p class="field-hint mono" id="dateHint"></p>
         </div>
 
         <div class="booking-field">
@@ -162,7 +168,10 @@
         <p class="booking-step-sub">We'll see you then. Save your reference number.</p>
         <div class="confirm-code" id="confirmCode"></div>
         <div class="summary-list" id="confirmSummary"></div>
-        <a href="index.html" class="btn btn-outline">Back to Home</a>
+        <div class="booking-nav" style="justify-content:center; gap:14px;">
+          <button type="button" class="btn btn-outline-yellow" id="downloadPdfBtn">Download PDF</button>
+          <a href="index.html" class="btn btn-outline">Back to Home</a>
+        </div>
       </section>
 
     </div>
@@ -173,6 +182,7 @@
   <p>&copy; 2026 LS Customs. Pasay City, PH. Est. 2019.</p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="script.js"></script>
 <script src="booking.js"></script>
 </body>

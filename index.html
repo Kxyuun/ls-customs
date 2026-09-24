@@ -89,6 +89,7 @@
           <h3 class="service-title">Auto Care</h3>
           <p class="service-desc">Regular upkeep services like oil changes, tire rotations, and fluid flushes to prevent breakdowns.</p>
           <p class="service-kicker mono" style="margin-bottom:0;">Starting From</p>
+          <button type="button" class="service-info-link mono" data-service="auto-care">What's Included &darr;</button>
           <div class="service-foot">
             <span class="service-price">&#8369;3,500+</span>
             <a href="book.html" class="service-arrow">&rarr;</a>
@@ -103,6 +104,7 @@
           <h3 class="service-title">Core Fix</h3>
           <p class="service-desc">Fixing or replacing broken core parts like the engine, transmission, brakes, or electrical systems.</p>
           <p class="service-kicker mono" style="margin-bottom:0;">Starting From</p>
+          <button type="button" class="service-info-link mono" data-service="core-fix">What's Included &darr;</button>
           <div class="service-foot">
             <span class="service-price">&#8369;4,000+</span>
             <a href="book.html" class="service-arrow">&rarr;</a>
@@ -117,6 +119,7 @@
           <h3 class="service-title">Vehicle Mod</h3>
           <p class="service-desc">Modifying the vehicle's look and performance through custom paint, body kits, wraps, and engine upgrades.</p>
           <p class="service-kicker mono" style="margin-bottom:0;">Starting From</p>
+          <button type="button" class="service-info-link mono" data-service="vehicle-mod">What's Included &darr;</button>
           <div class="service-foot">
             <span class="service-price">&#8369;23,000+</span>
             <a href="book.html" class="service-arrow">&rarr;</a>
@@ -131,6 +134,7 @@
           <h3 class="service-title">Body Work</h3>
           <p class="service-desc">Fixing structural damage, dents, and scratches after an accident to restore the car's shape.</p>
           <p class="service-kicker mono" style="margin-bottom:0;">Starting From</p>
+          <button type="button" class="service-info-link mono" data-service="body-work">What's Included &darr;</button>
           <div class="service-foot">
             <span class="service-price">&#8369;25,000+</span>
             <a href="book.html" class="service-arrow">&rarr;</a>
@@ -311,6 +315,16 @@
 <footer class="site-footer">
   <p>&copy; 2026 LS Customs. Pasay City, PH. Est. 2019.</p>
 </footer>
+
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="modalClose">&times;</button>
+    <p class="service-kicker mono" id="modalKicker"></p>
+    <h3 class="service-title" id="modalTitle"></h3>
+    <ul class="modal-list" id="modalList"></ul>
+    <a href="book.html" class="btn btn-yellow" style="margin-top:10px;">Book This Service</a>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
