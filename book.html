@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Book Appointment — LS Customs</title>
+<script src="customer-guard.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -85,29 +86,41 @@
 
       <section class="booking-screen" data-screen="2" hidden>
         <h2 class="booking-step-title">Choose a service</h2>
-        <p class="booking-step-sub">Select one or more from our menu.</p>
+        <p class="booking-step-sub">Select one or more from our menu. Tap the info icon to see what's included.</p>
         <div class="service-select-grid" id="serviceOptions">
-          <div class="service-select-card" data-value="Auto Care" data-price="3500">
+          <div class="service-select-card" data-value="Auto Care" data-price="3500" data-detail="auto-care">
             <span class="service-select-name">Auto Care</span>
+            <span class="service-info-icon mono" data-detail="auto-care">&#9432;</span>
             <span class="service-select-price">&#8369;3,500+</span>
           </div>
-          <div class="service-select-card" data-value="Core Fix" data-price="4000">
+          <div class="service-select-card" data-value="Core Fix" data-price="4000" data-detail="core-fix">
             <span class="service-select-name">Core Fix</span>
+            <span class="service-info-icon mono" data-detail="core-fix">&#9432;</span>
             <span class="service-select-price">&#8369;4,000+</span>
           </div>
-          <div class="service-select-card" data-value="Vehicle Mod" data-price="23000">
+          <div class="service-select-card" data-value="Vehicle Mod" data-price="23000" data-detail="vehicle-mod">
             <span class="service-select-name">Vehicle Mod</span>
+            <span class="service-info-icon mono" data-detail="vehicle-mod">&#9432;</span>
             <span class="service-select-price">&#8369;23,000+</span>
           </div>
-          <div class="service-select-card" data-value="Body Work" data-price="25000">
+          <div class="service-select-card" data-value="Body Work" data-price="25000" data-detail="body-work">
             <span class="service-select-name">Body Work</span>
+            <span class="service-info-icon mono" data-detail="body-work">&#9432;</span>
             <span class="service-select-price">&#8369;25,000+</span>
           </div>
-          <div class="service-select-card" data-value="Not Sure? Get a Consultation" data-price="0">
+          <div class="service-select-card" data-value="Not Sure? Get a Consultation" data-price="0" data-detail="consultation">
             <span class="service-select-name">Not Sure? Get a Consultation</span>
+            <span class="service-info-icon mono" data-detail="consultation">&#9432;</span>
             <span class="service-select-price">Free</span>
           </div>
         </div>
+
+        <div class="service-detail-panel" id="serviceDetailPanel" hidden>
+          <p class="service-kicker mono" id="detailKicker"></p>
+          <h3 class="service-title" id="detailTitle" style="font-size:22px;"></h3>
+          <ul class="modal-list" id="detailList"></ul>
+        </div>
+
         <p class="booking-step-sub" style="margin-top:14px; margin-bottom:0;">Don't know what your car needs? Pick Consultation and we'll figure it out with you on-site.</p>
         <p class="booking-error mono" id="error2">Pick at least one service to continue.</p>
         <div class="booking-nav">
@@ -183,6 +196,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="service-data.js"></script>
 <script src="script.js"></script>
 <script src="booking.js"></script>
 </body>

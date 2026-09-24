@@ -17,11 +17,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var slotGrid = document.getElementById('slotGrid');
 
   var today = new Date();
-  dateInput.min = today.toISOString().split('T')[0];
+  var todayStr = today.toISOString().split('T')[0];
+  dateInput.min = todayStr;
+  dateInput.value = todayStr;
 
   var maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 30);
-  dateInput.max = maxDate.toISOString().split('T')[0];
+  var maxDateStr = maxDate.toISOString().split('T')[0];
+  dateInput.max = maxDateStr;
 
   var fullyBookedDates = getDemoFullyBookedDates();
   var dateHint = document.getElementById('dateHint');
@@ -64,6 +67,29 @@ document.addEventListener('DOMContentLoaded', function () {
         card.classList.remove('selected');
       }
       hideError('error2');
+    });
+  });
+
+  var detailPanel = document.getElementById('serviceDetailPanel');
+  serviceOptions.querySelectorAll('.service-info-icon').forEach(function (icon) {
+    icon.addEventListener('click', function (e) {
+      e.stopPropagation();
+
+      var data = serviceDetails[icon.dataset.detail];
+      if (!data) return;
+
+      document.getElementById('detailKicker').textContent = data.kicker;
+      document.getElementById('detailTitle').textContent = data.title;
+
+      var list = document.getElementById('detailList');
+      list.innerHTML = '';
+      data.items.forEach(function (item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
+      });
+
+      detailPanel.hidden = false;
     });
   });
 
@@ -110,7 +136,14 @@ document.addEventListener('DOMContentLoaded', function () {
     return display + ':00 ' + period;
   }
 
+  booking.date = dateInput.value;
+  buildSlots();
+
   dateInput.addEventListener('change', function () {
+    if (dateInput.value < todayStr || dateInput.value > maxDateStr) {
+      dateInput.value = todayStr;
+    }
+
     booking.date = dateInput.value;
     booking.slot = null;
     buildSlots();

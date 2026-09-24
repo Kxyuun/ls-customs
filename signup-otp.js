@@ -2,6 +2,12 @@ var OTP_SEND_API_URL = null;
 var OTP_VERIFY_API_URL = null;
 var currentDemoOtp = null;
 
+function loginUrlWithRedirect() {
+  var params = new URLSearchParams(window.location.search);
+  var redirectParam = params.get('redirect');
+  return redirectParam ? 'login.html?redirect=' + encodeURIComponent(redirectParam) : 'login.html';
+}
+
 function startSignupOtp() {
   var email = document.getElementById('signupEmail').value.trim();
   document.getElementById('otpEmailTarget').textContent = email;
@@ -48,7 +54,7 @@ function verifyOtp() {
     if (code === currentDemoOtp) {
       errorBox.classList.remove('show');
       alert('Account verified. Hook this up to your backend to actually create the account.');
-      window.location.href = 'login.html';
+      window.location.href = loginUrlWithRedirect();
     } else {
       errorBox.textContent = 'That code doesn\'t match. Try again.';
       errorBox.classList.add('show');
@@ -71,7 +77,7 @@ function verifyOtp() {
       return res.json();
     })
     .then(function () {
-      window.location.href = 'login.html';
+      window.location.href = loginUrlWithRedirect();
     })
     .catch(function () {
       verifyBtn.disabled = false;

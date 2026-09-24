@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — LS Customs</title>
+<script src="customer-guard.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="brand">
+      <div class="brand-mark"><span></span></div>
+      <div class="brand-name">LS <span class="yellow">CUSTOMS</span></div>
+      <div class="brand-est mono">EST. 2019</div>
+    </div>
+
+    <nav class="nav-links mono">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#schedule">Schedule</a>
+      <a href="index.html#about">About</a>
+    </nav>
+
+    <div class="nav-right">
+      <a href="#" class="login-link mono" id="logoutLink">Log Out</a>
+      <a href="book.html" class="btn btn-yellow">+ Book Appointment</a>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </div>
+</header>
+
+<main class="booking-page">
+  <div class="container">
+    <div class="booking-head">
+      <p class="auth-eyebrow mono">Your account</p>
+      <h1>My Account</h1>
+    </div>
+
+    <div class="booking-panel">
+      <h2 class="booking-step-title">Profile</h2>
+      <p class="booking-step-sub">Update your details below.</p>
+
+      <form id="accountForm">
+        <div class="field-row">
+          <div class="booking-field">
+            <label>First Name</label>
+            <input type="text" id="acctFirstName" maxlength="25" pattern="[A-Za-z\s'-]+">
+          </div>
+          <div class="booking-field">
+            <label>Last Name</label>
+            <input type="text" id="acctLastName" maxlength="25" pattern="[A-Za-z\s'-]+">
+          </div>
+        </div>
+
+        <div class="booking-field">
+          <label>Email</label>
+          <input type="email" id="acctEmail" maxlength="40" readonly>
+        </div>
+
+        <p class="booking-error mono" id="acctError">Names can only contain letters.</p>
+
+        <div class="booking-nav">
+          <span></span>
+          <button type="submit" class="btn btn-yellow">Save Changes</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="booking-panel" style="margin-top:30px;">
+      <h2 class="booking-step-title">My Bookings</h2>
+      <p class="booking-step-sub">This will show your real booking history once the backend is connected. No bookings on file yet in this demo.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>&copy; 2026 LS Customs. Pasay City, PH. Est. 2019.</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="account.js"></script>
+</body>
+</html>

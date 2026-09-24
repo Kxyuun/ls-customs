@@ -19,6 +19,7 @@ Dark theme, yellow/red accents, "Laging Sira? We Can Fix It!" — Los Santos Cus
 | `book.html` | 4-step booking flow — this is the main interactive piece |
 | `staff-login.html` | Login for staff/admin accounts — not linked anywhere in the public nav, direct URL only |
 | `dashboard.html` | Staff/admin dashboard — every booking, status updates, admin-only staff account management |
+| `account.html` | Customer's own account page — view/edit name, log out. Requires being logged in (redirects to login if not) |
 
 ### Shared files
 | File | What it is |
@@ -26,6 +27,9 @@ Dark theme, yellow/red accents, "Laging Sira? We Can Fix It!" — Los Santos Cus
 | `style.css` | All styling for every page. One shared stylesheet, no page has its own styles. |
 | `script.js` | Runs on every page — mobile nav toggle, password show/hide buttons, basic signup validation |
 | `booking.js` | Only runs on `book.html` — the booking flow logic |
+| `customer-guard.js` | Runs on `book.html` and `account.html` — redirects to login if no one's logged in (demo-only, real protection has to happen server-side too, see AUTH.md) |
+| `service-data.js` | Shared service info (what's included in each service) — used by both `index.html`'s popup and `book.html`'s inline info |
+| `account.js` | Runs on `account.html` — loads/saves the demo profile, handles logout |
 | `staff-login.js` | Runs on `staff-login.html` — handles the login form |
 | `dashboard.js` | Runs on `dashboard.html` — mock bookings, status changes, role toggle, staff account management |
 

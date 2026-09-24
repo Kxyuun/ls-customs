@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
+  var params = new URLSearchParams(window.location.search);
+  var redirectParam = params.get('redirect');
+
+  if (redirectParam) {
+    var registerLink = document.getElementById('registerLink');
+    var loginLink = document.getElementById('loginLink');
+    if (registerLink) registerLink.href = 'signup.html?redirect=' + encodeURIComponent(redirectParam);
+    if (loginLink) loginLink.href = 'login.html?redirect=' + encodeURIComponent(redirectParam);
+  }
+
   var toggle = document.querySelector('.nav-toggle');
   var navLinks = document.querySelector('.nav-links');
 
@@ -6,6 +16,15 @@ document.addEventListener('DOMContentLoaded', function () {
     toggle.addEventListener('click', function () {
       navLinks.classList.toggle('nav-open');
     });
+  }
+
+  var siteLoginLink = document.querySelector('.nav-right .login-link');
+  if (siteLoginLink && siteLoginLink.id !== 'logoutLink') {
+    var isLoggedIn = localStorage.getItem('lsc_customer_logged_in') === 'true';
+    if (isLoggedIn) {
+      siteLoginLink.textContent = 'My Account';
+      siteLoginLink.href = 'account.html';
+    }
   }
 
   var showButtons = document.querySelectorAll('.field-toggle');
@@ -72,56 +91,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      alert('Form looks good. Hook this up to your backend to actually submit it.');
+      var emailInput = authForm.querySelector('input[name="email"]');
+      localStorage.setItem('lsc_customer_logged_in', 'true');
+      localStorage.setItem('lsc_customer_email', emailInput.value.trim());
+
+      var params = new URLSearchParams(window.location.search);
+      var redirectTo = params.get('redirect') || 'index.html';
+      window.location.href = redirectTo;
     });
   }
-
-  var serviceDetails = {
-    'auto-care': {
-      kicker: 'Routine Maintenance',
-      title: 'Auto Care',
-      items: [
-        'Engine oil and filter change',
-        'Tire rotation and pressure check',
-        'Brake fluid, coolant, and transmission fluid top-up',
-        'Battery health check',
-        'Multi-point visual inspection'
-      ]
-    },
-    'core-fix': {
-      kicker: 'Damage Repairs',
-      title: 'Core Fix',
-      items: [
-        'Engine diagnostics and repair',
-        'Transmission repair or replacement',
-        'Brake system repair (pads, rotors, lines)',
-        'Electrical system troubleshooting and fixes',
-        'Follow-up test drive after repair'
-      ]
-    },
-    'vehicle-mod': {
-      kicker: 'Modifications',
-      title: 'Vehicle Mod',
-      items: [
-        'Custom paint jobs and wraps',
-        'Body kit installation',
-        'Engine performance upgrades',
-        'Suspension and exhaust modifications',
-        'Consultation on parts compatibility before work starts'
-      ]
-    },
-    'body-work': {
-      kicker: 'Structure Repair',
-      title: 'Body Work',
-      items: [
-        'Dent and scratch removal',
-        'Panel replacement after collision',
-        'Frame straightening',
-        'Rust treatment and repainting',
-        'Photo documentation before and after'
-      ]
-    }
-  };
 
   var serviceModal = document.getElementById('serviceModal');
   if (serviceModal) {

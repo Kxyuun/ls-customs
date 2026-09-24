@@ -638,6 +638,24 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-dim);
 }
 
+.service-select-name { flex: 1; }
+
+.service-info-icon {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin: 0 12px;
+  cursor: pointer;
+}
+
+.service-info-icon:hover { color: var(--yellow); }
+
+.service-detail-panel {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  background: var(--panel-alt);
+  padding: 20px;
+}
+
 /* booking flow */
 .booking-page { padding: 60px 0 90px; }
 
