@@ -1,4 +1,2 @@
-.DS_Store
-*.zip
-node_modules/
-.vscode/
+node_modules
+dist
