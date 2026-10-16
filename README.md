@@ -1,77 +1,52 @@
-# LS Customs - Frontend (React + Vite)
+# LS Customs
 
-Customer booking site and staff/admin dashboard for LS Customs, an auto shop in Pasay City.
-This is the **client** of a full-stack MERN application. It talks to the Express API in the
-`ls-customs-api` project (MongoDB Atlas + Mongoose + Nodemailer).
+Auto shop booking website for LS Customs, Pasay City. A full-stack MERN course project (BSIT).
 
-## Run it
+- Customers sign up with an emailed one-time code (OTP), book a service, download a PDF confirmation, and track their bookings.
+- Staff and admins log in through the same page and manage bookings. Admins also manage staff accounts.
 
-1. Start the API first (see the API README: `npm install`, copy `.env.example` to `.env`, `npm run seed`, `npm run dev`).
-   It runs on `http://localhost:4000`.
-2. In this folder:
+## Folders
 
-```bash
+```
+ls-customs/
+├── frontend/   React + Vite app (the website)
+├── backend/    Node + Express + MongoDB API
+└── README.md   this file
+```
+
+Each folder has its own README with more detail.
+
+## How to run it
+
+You need two terminals, one for each folder. Start the backend first.
+
+**1. Backend** (runs on http://localhost:4000)
+
+```
+cd backend
+npm install
+```
+
+Copy `.env.example` to `.env` and fill in your own values (MongoDB connection string, JWT secret, Gmail App Password). The `.env` file is ignored by git, never commit it.
+
+```
+npm run seed
+npm run dev
+```
+
+`npm run seed` creates the first admin account. It only needs to run once.
+
+**2. Frontend** (runs on http://localhost:5173)
+
+```
+cd frontend
 npm install
 npm run dev
 ```
 
-Open the URL Vite prints (usually `http://localhost:5173`). The API allows this origin by default (`FRONTEND_ORIGIN`).
+Open http://localhost:5173 in your browser.
 
-Production build: `npm run build`, then `npm run preview`.
+## Before you present or deploy
 
-## What it does
-
-- Customer registration with an emailed one-time code (OTP), login, forgot password, change password, change email, edit profile.
-- One login page for customers, staff and administrators. The server returns the role and the app sends each role to the right page.
-- Four-step booking: vehicle, service and add-ons, date and time slot (live availability from the API), confirm and pay method.
-- Booking confirmation with a reference code and a downloadable PDF summary (jsPDF).
-- My Account: bookings, cancel a pending booking, in-app notifications (refreshed about every 15 seconds).
-- Staff dashboard: all bookings with status control (valid next steps only). Admins also add and remove staff accounts.
-- Responsive layout for desktop and mobile.
-
-## Where the API address lives
-
-Every endpoint URL is in `src/config/api.js` (all point to `http://localhost:4000`). Change the address there if the API runs somewhere else.
-Setting an entry to `null` switches that one feature to a local browser-only demo mode, which is only useful for development without the API.
-
-## Tech
-
-React 18, React Router 6, Vite 5, jsPDF. Components are plain `.js` files containing JSX (`vite.config.js` tells esbuild to parse JSX in `.js` files).
-
-## Project structure
-
-```
-src/
-  main.js, App.js          entry point and route table
-  config/api.js            every API endpoint URL
-  pages/                   Home, Login, Signup, ForgotPassword, Book, Account, Dashboard, StaffLogin, NotFound
-  components/              Header, Footer, route guards, dialogs, form fields, booking widgets
-  data/                    services and prices, business hours and info, booking content
-  utils/                   API client, auth/session, validation, stores, dates, pricing
-  assets/                  photos used by the pages
-  style.css                stylesheet (dark theme, yellow accents)
-```
-
-## Routes
-
-| Route | Page |
-|---|---|
-| `/` | Home (services, schedule, contact) |
-| `/login` | Login for customers, staff and admins |
-| `/signup` | Customer registration with email OTP |
-| `/forgot-password` | Password reset with an emailed code |
-| `/book` | Booking flow (customers) |
-| `/account` | My Account (customers) |
-| `/dashboard` | Staff and admin dashboard |
-| `/staff-login` | Local demo setup only; forwards to `/login` when the API is configured |
-
-## Security notes
-
-- The browser never decides roles, prices or booking rules. The API checks the role on every request, calculates the total itself, and enforces the status workflow.
-- Passwords are hashed by the API (bcrypt). Sessions use signed JWTs that expire after 7 days.
-- Only a password **reset** ends older sessions; a normal password change does not.
-
-## Before launch
-
-- The shop owner should confirm the phone, email, address and prices in `src/data/businessInfo.js` and `src/data/serviceData.js`.
-- Remove the local-demo-only parts (the `/staff-login` setup screen and demo account stores in `src/utils/auth.js`) once the API is the only mode.
+- Change the default admin email and password in `backend/.env` before running `npm run seed`.
+- Make sure no `.env` file was ever committed.
