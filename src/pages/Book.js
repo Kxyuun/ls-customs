@@ -6,7 +6,8 @@ import Footer from '../components/Footer.js';
 import RequireCustomerAuth from '../components/RequireCustomerAuth.js';
 import ProgressTrack from '../components/ProgressTrack.js';
 import ChoiceCard from '../components/ChoiceCard.js';
-import { serviceDetails, serviceOptions } from '../data/serviceData.js';
+import { API } from '../config/api.js';
+import { serviceDetails, serviceOptions, priceForVehicle } from '../data/serviceData.js';
 import { vehicleOptions, payOptions, vehicleStepSub, pricingNote } from '../data/bookingContent.js';
 import { BOOKING_WINDOW_DAYS, closedDaysText, dayName, hoursSummary } from '../data/businessHours.js';
 import { businessInfo } from '../data/businessInfo.js';
@@ -270,10 +271,13 @@ function BookingFlow({ customer }) {
     });
   }
 
-  // Total = chosen base price + add-ons. Vehicle type does NOT change price.
+  // Total = chosen base price + add-ons. Only Car Wash depends on vehicle type
+  // (see priceForVehicle); every other service has one price.
+  function unitPrice(option) { return priceForVehicle(option, vehicle); }
+
   function totalPrice() {
     if (!baseService) return 0;
-    return baseService.price + addons.reduce(function (sum, a) { return sum + a.price; }, 0);
+    return unitPrice(baseService) + addons.reduce(function (sum, a) { return sum + unitPrice(a); }, 0);
   }
 
   function selectedServiceNames() {
@@ -415,7 +419,7 @@ function BookingFlow({ customer }) {
   if (availabilityLoading) slotMessage = 'Loading availability...';
   else if (availability.status === 'error') slotMessage = 'Could not load availability. Pick the date again or reload.';
   else if (availability.data.status === 'closed') slotMessage = 'Closed on ' + dayName(dayOfWeek(date)) + 's. Pick another date.';
-  else if (availability.data.status === 'full') slotMessage = 'Fully booked that day (demo data). Pick another date.';
+  else if (availability.data.status === 'full') slotMessage = 'Fully booked that day' + (API.AVAILABILITY ? '' : ' (demo data)') + '. Pick another date.';
   else if (allSlotsGone) slotMessage = 'No more time slots left today. Pick another date.';
 
   var bookingSummary = confirmed || {
@@ -485,7 +489,7 @@ function BookingFlow({ customer }) {
                       type="radio"
                       name="base-service"
                       selected={selected}
-                      priceText={formatStartingPrice(option.price)}
+                      priceText={formatStartingPrice(unitPrice(option))}
                       onSelect={function () { selectBaseService(option); }}
                       onInfo={function () { setActiveDetail(option.detail); }}
                     />
@@ -506,7 +510,7 @@ function BookingFlow({ customer }) {
                           type="checkbox"
                           name="addon"
                           selected={selected}
-                          priceText={formatAddonPrice(option.price)}
+                          priceText={formatAddonPrice(unitPrice(option))}
                           onSelect={function () { toggleAddon(option); }}
                           onInfo={function () { setActiveDetail(option.detail); }}
                         />
@@ -554,7 +558,9 @@ function BookingFlow({ customer }) {
                 <label htmlFor="bookingDate">Date</label>
                 <input id="bookingDate" type="date" min={todayStr} max={maxDateStr} value={date} onChange={handleDateChange} />
                 <p className="field-hint mono">
-                  Demo availability: sample data, not live shop availability. Sample full days: {getDemoFullDates(todayStr).join(', ')}.
+                  {API.AVAILABILITY
+                    ? 'Times shown are live: a slot disappears once it is booked.'
+                    : 'Demo availability: sample data, not live shop availability. Sample full days: ' + getDemoFullDates(todayStr).join(', ') + '.'}
                 </p>
               </div>
 

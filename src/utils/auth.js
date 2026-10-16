@@ -207,17 +207,26 @@ export function logoutCustomer() {
   removeKey('local', CUSTOMER_SESSION_KEY);
 }
 
-// Saves the profile name for the ACTIVE account only.
-export function updateCustomerProfile(firstName, lastName) {
+// Saves the profile name for the ACTIVE account only. Resolves to true/false.
+//   API mode:   PATCH API.PROFILE so the name is stored in the database, then
+//               the session copy is refreshed from the server's answer.
+//   Local demo: edits the account stored on this browser.
+export async function updateCustomerProfile(firstName, lastName) {
   var s = getCustomerSession();
   if (!s) return false;
   var f = normalizeName(firstName);
   var l = normalizeName(lastName);
 
   if (s.mode === 'api') {
-    // BACKEND LATER: send the update to a profile endpoint. Until then only
-    // the session copy changes.
     try {
+      if (API.PROFILE) {
+        var data = await apiRequest(API.PROFILE, {
+          method: 'PATCH', token: s.token, body: { firstName: f, lastName: l }
+        });
+        var u = (data && data.user) || {};
+        f = normalizeName(u.firstName || f);
+        l = normalizeName(u.lastName || l);
+      }
       startCustomerSession({ mode: 'api', token: s.token, email: s.email, firstName: f, lastName: l });
       return true;
     } catch (err) {
@@ -261,6 +270,33 @@ export async function changeCustomerPassword(currentPassword, newPassword) {
     return a.email === account.email ? Object.assign({}, a, { salt: salt, passwordHash: passwordHash }) : a;
   });
   requireWrite(writeJSON('local', CUSTOMER_ACCOUNTS_KEY, accounts));
+  return true;
+}
+
+// Change email for the ACTIVE customer, in two steps. API mode only: the server
+// emails a one-time code to the NEW address and only switches the account after
+// the code is confirmed. Local demo mode has no inbox, so nothing is faked.
+export async function requestEmailChange(newEmail, password) {
+  var s = getCustomerSession();
+  if (!s) throw new ApiError('Not signed in', 401);
+  if (s.mode !== 'api' || !API.CHANGE_EMAIL_REQUEST) throw new ApiError('Backend required', 501);
+  await apiRequest(API.CHANGE_EMAIL_REQUEST, {
+    method: 'POST', token: s.token,
+    body: { newEmail: normalizeEmail(newEmail), password: password }
+  });
+  return true;
+}
+
+export async function confirmEmailChange(newEmail, code) {
+  var s = getCustomerSession();
+  if (!s) throw new ApiError('Not signed in', 401);
+  if (s.mode !== 'api' || !API.CHANGE_EMAIL_CONFIRM) throw new ApiError('Backend required', 501);
+  var data = await apiRequest(API.CHANGE_EMAIL_CONFIRM, {
+    method: 'POST', token: s.token,
+    body: { newEmail: normalizeEmail(newEmail), code: String(code || '').trim() }
+  });
+  // The server returns a fresh session for the new email.
+  startApiCustomerSession(data, { email: newEmail });
   return true;
 }
 

@@ -52,6 +52,23 @@ export var serviceDetails = {
       'Photo documentation before and after'
     ]
   },
+  // Car Wash is the ONLY service priced by vehicle type. `price` is the lowest
+  // (starting) price; `vehiclePrices` is what is actually charged.
+  // PLACEHOLDER PRICES - the owner must confirm them. The backend keeps the same
+  // table in ls-customs-api/utils/pricing.js (keep both in sync).
+  'car-wash': {
+    kicker: 'Cleaning',
+    title: 'Car Wash',
+    price: 200,
+    vehiclePrices: { Sedan: 350, SUV: 500, Motorcycle: 200 },
+    items: [
+      'Exterior hand wash and dry',
+      'Wheel, tire and rim cleaning',
+      'Interior vacuum and dashboard wipe-down',
+      'Window and mirror cleaning',
+      'Price depends on vehicle type (sedan, SUV or motorcycle)'
+    ]
+  },
   'consultation': {
     kicker: 'Not Sure What You Need?',
     title: 'Consultation',
@@ -74,7 +91,18 @@ export var serviceOptions = [
   { value: 'Core Fix', price: serviceDetails['core-fix'].price, detail: 'core-fix' },
   { value: 'Vehicle Mod', price: serviceDetails['vehicle-mod'].price, detail: 'vehicle-mod' },
   { value: 'Body Work', price: serviceDetails['body-work'].price, detail: 'body-work' },
+  { value: 'Car Wash', price: serviceDetails['car-wash'].price, vehiclePrices: serviceDetails['car-wash'].vehiclePrices, detail: 'car-wash' },
   { value: 'Not Sure? Get a Consultation', price: serviceDetails['consultation'].price, detail: 'consultation' }
 ];
+
+// Price of a service for a vehicle type. Services without `vehiclePrices` cost
+// the same for every vehicle. Falls back to the starting price if no vehicle
+// has been picked yet.
+export function priceForVehicle(option, vehicle) {
+  if (option && option.vehiclePrices && vehicle && option.vehiclePrices[vehicle] !== undefined) {
+    return option.vehiclePrices[vehicle];
+  }
+  return option ? option.price : 0;
+}
 
 export default serviceDetails;

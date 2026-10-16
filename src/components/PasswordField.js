@@ -1,3 +1,4 @@
+// Password input with a Show/Hide toggle, used on login, signup and account forms.
 import { useState } from 'react';
 
 function PasswordField({ id, name, placeholder, value, onChange, minLength, maxLength, required }) {

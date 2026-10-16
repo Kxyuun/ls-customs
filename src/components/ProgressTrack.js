@@ -1,3 +1,4 @@
+// The 4-step progress bar at the top of the booking page (vehicle, service, schedule, confirm).
 var steps = [
   { step: '1', label: 'Vehicle' },
   { step: '2', label: 'Service' },

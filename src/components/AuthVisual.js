@@ -1,3 +1,4 @@
+// Left-hand photo panel with the tagline, shared by the Login and Signup pages.
 import tireImage from '../assets/tire-hero.jpg';
 
 function AuthVisual() {

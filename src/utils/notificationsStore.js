@@ -20,8 +20,10 @@ var KEY = 'lsc_notifications';
 
 // Statuses (see bookingStatus.js) that notify the customer.
 var NOTIFY_ON = {
+  progress: 'We started working on your vehicle.',
   ready: 'Your vehicle is ready for pickup.',
-  done: 'Your booking is completed. Thank you for choosing LS Customs.'
+  done: 'Your booking is completed. Thank you for choosing LS Customs.',
+  cancelled: 'Your booking was cancelled.'
 };
 
 function readAll() {

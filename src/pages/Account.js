@@ -4,13 +4,34 @@ import Footer from '../components/Footer.js';
 import RequireCustomerAuth from '../components/RequireCustomerAuth.js';
 import PasswordField from '../components/PasswordField.js';
 import { API } from '../config/api.js';
-import { authErrorMessage, changeCustomerPassword, updateCustomerProfile, useCustomerSession } from '../utils/auth.js';
+import { authErrorMessage, changeCustomerPassword, confirmEmailChange, requestEmailChange, updateCustomerProfile, useCustomerSession } from '../utils/auth.js';
 import { listNotifications, markNotificationRead, subscribeNotifications } from '../utils/notificationsStore.js';
 import { listBookings, subscribeBookings, updateBookingStatus } from '../utils/bookingsStore.js';
 import { STATUS_LABELS, customerCanCancel } from '../utils/bookingStatus.js';
 import { formatEstimatedTotal } from '../utils/pricing.js';
-import { EMAIL_MAX, NAME_MAX, NAME_MESSAGE, PASSWORD_MESSAGE, isValidName, isValidPassword, normalizeName } from '../utils/validation.js';
+import { EMAIL_MAX, NAME_MAX, NAME_MESSAGE, PASSWORD_MESSAGE, isValidEmail, isValidName, isValidPassword, normalizeEmail, normalizeName } from '../utils/validation.js';
 import { usePageTitle } from '../utils/usePageTitle.js';
+
+// How often a signed-in customer's page re-checks the server, so a status change
+// the shop just made (and its notification) shows up without a manual reload.
+var REFRESH_MS = 15000;
+
+// Calls `fn` every REFRESH_MS while the tab is visible, and right away when the
+// customer returns to the tab. Only used when talking to the real API.
+function useLiveRefresh(enabled, fn) {
+  useEffect(function () {
+    if (!enabled) return undefined;
+    var timer = setInterval(function () {
+      if (document.visibilityState === 'visible') fn();
+    }, REFRESH_MS);
+    function onVisible() { if (document.visibilityState === 'visible') fn(); }
+    document.addEventListener('visibilitychange', onVisible);
+    return function () {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [enabled, fn]);
+}
 
 function MyBookings({ customer }) {
   var [state, setState] = useState({ status: 'loading', bookings: [] });
@@ -31,6 +52,8 @@ function MyBookings({ customer }) {
     // Same store as the staff Dashboard: status changes made there show up here.
     return subscribeBookings(function () { load(true); });
   }, [load]);
+
+  useLiveRefresh(!!API.BOOKINGS, useCallback(function () { load(true); }, [load]));
 
   async function handleCancel(booking) {
     if (busyId) return;
@@ -63,7 +86,7 @@ function MyBookings({ customer }) {
         <p className="booking-step-sub">You have no bookings yet.</p>
       )}
       {state.status === 'ready' && state.bookings.length > 0 && (
-        <p className="booking-step-sub">Bookings made on this browser (demo storage, not yet synced to a server).</p>
+        <p className="booking-step-sub">{API.BOOKINGS ? 'Your bookings. Status updates appear here automatically.' : 'Bookings made on this browser (demo storage, not yet synced to a server).'}</p>
       )}
       {actionError && <p className="booking-error mono show" role="alert">{actionError}</p>}
 
@@ -111,6 +134,8 @@ function Notifications({ customer }) {
     return subscribeNotifications(function () { load(); });
   }, [load]);
 
+  useLiveRefresh(!!API.NOTIFICATIONS, load);
+
   async function handleRead(item) {
     if (busy) return;
     setBusy(true);
@@ -128,7 +153,7 @@ function Notifications({ customer }) {
       <h2 className="booking-step-title">Notifications{unread > 0 ? ' (' + unread + ' new)' : ''}</h2>
       <p className="field-hint mono">
         {API.NOTIFICATIONS
-          ? 'Updates from the shop about your bookings.'
+          ? 'Updates from the shop about your bookings. A copy is also emailed to you.'
           : 'Demo: these appear here only, on this browser. No email, SMS or push message is sent. Real notification delivery needs a backend.'}
       </p>
 
@@ -140,7 +165,7 @@ function Notifications({ customer }) {
         </div>
       )}
       {state.status === 'ready' && state.items.length === 0 && (
-        <p className="booking-step-sub">No notifications yet. You'll see an update here when a booking is ready for pickup or completed.</p>
+        <p className="booking-step-sub">No notifications yet. You'll see an update here (and get an email) when your booking is in progress, ready for pickup, completed or cancelled.</p>
       )}
 
       {state.status === 'ready' && state.items.map(function (n) {
@@ -163,6 +188,123 @@ function Notifications({ customer }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function ChangeEmail({ customer }) {
+  var [step, setStep] = useState('form'); // 'form' | 'code'
+  var [newEmail, setNewEmail] = useState('');
+  var [password, setPassword] = useState('');
+  var [code, setCode] = useState('');
+  var [error, setError] = useState('');
+  var [info, setInfo] = useState('');
+  var [busy, setBusy] = useState(false);
+  var busyRef = useRef(false);
+
+  var enabled = !!(API.CHANGE_EMAIL_REQUEST && API.CHANGE_EMAIL_CONFIRM) && customer.mode === 'api';
+
+  function reset() {
+    setStep('form'); setCode(''); setError(''); setInfo('');
+  }
+
+  function messageFor(err, fallback) {
+    var st = err && err.status;
+    if (st === 401) return step === 'form' ? 'Your password is incorrect.' : 'Your session ended. Log in again.';
+    if (st === 409) return 'That email is already in use.';
+    if (st === 429) return 'Too many requests. Wait a few minutes and try again.';
+    if (st === 400 && step === 'code') return 'That code is wrong or expired. Check the newest email or send a new code.';
+    if (st === 501) return 'Changing your email needs the server, which is not connected.';
+    return authErrorMessage(err, fallback);
+  }
+
+  async function sendCode(e) {
+    if (e) e.preventDefault();
+    if (busyRef.current) return;
+    var target = normalizeEmail(newEmail);
+    if (!isValidEmail(target)) { setError('Enter a valid email address.'); return; }
+    if (target === customer.email) { setError('That is already your email.'); return; }
+    if (!password) { setError('Enter your current password to continue.'); return; }
+
+    busyRef.current = true; setBusy(true); setError(''); setInfo('');
+    try {
+      await requestEmailChange(target, password);
+      setNewEmail(target);
+      setStep('code');
+      setInfo('We sent a 6-digit code to ' + target + '. It expires in 10 minutes.');
+    } catch (err) {
+      setError(messageFor(err, "Couldn't send the code. Try again."));
+    } finally {
+      busyRef.current = false; setBusy(false);
+    }
+  }
+
+  async function confirm(e) {
+    e.preventDefault();
+    if (busyRef.current) return;
+    var clean = code.trim();
+    if (!/^\d{6}$/.test(clean)) { setError('Enter the full 6-digit code (numbers only).'); return; }
+
+    busyRef.current = true; setBusy(true); setError('');
+    try {
+      // On success the session switches to the new email and this page reloads
+      // its data for it, so there is nothing more to do here.
+      await confirmEmailChange(newEmail, clean);
+      setPassword('');
+    } catch (err) {
+      setError(messageFor(err, "Couldn't confirm the code. Try again."));
+    } finally {
+      busyRef.current = false; setBusy(false);
+    }
+  }
+
+  return (
+    <div className="booking-panel" style={{ marginTop: '30px' }}>
+      <h2 className="booking-step-title">Change Email</h2>
+      <p className="field-hint mono">
+        {enabled
+          ? 'We email a code to your NEW address. Your email only changes after you enter it.'
+          : 'Changing your email needs the server, which is not connected in demo mode.'}
+      </p>
+
+      {enabled && step === 'form' && (
+        <form onSubmit={sendCode} style={{ marginTop: '16px' }}>
+          <div className="field">
+            <label htmlFor="acctNewEmail">New Email</label>
+            <input id="acctNewEmail" type="email" placeholder="NEW EMAIL ADDRESS" maxLength={EMAIL_MAX} autoComplete="email" required value={newEmail}
+              onChange={function (e) { setNewEmail(e.target.value); setError(''); }} />
+          </div>
+          <div className="field">
+            <label htmlFor="acctEmailPassword">Current Password</label>
+            <PasswordField id="acctEmailPassword" name="email_change_password" placeholder="CURRENT PASSWORD" maxLength={32} required value={password}
+              onChange={function (e) { setPassword(e.target.value); setError(''); }} />
+          </div>
+          <p className={'booking-error mono' + (error ? ' show' : '')} role="alert">{error}</p>
+          <div className="booking-nav">
+            <span></span>
+            <button type="submit" className="btn btn-yellow" disabled={busy}>{busy ? 'Sending...' : 'Send Code'}</button>
+          </div>
+        </form>
+      )}
+
+      {enabled && step === 'code' && (
+        <form onSubmit={confirm} style={{ marginTop: '16px' }}>
+          {info && <p className="field-hint mono" role="status">{info}</p>}
+          <div className="field">
+            <label htmlFor="acctEmailCode">6-digit code</label>
+            <input id="acctEmailCode" type="text" placeholder="000000" inputMode="numeric" autoComplete="one-time-code" maxLength={6} required value={code}
+              onChange={function (e) { setCode(e.target.value.replace(/\D/g, '')); setError(''); }} />
+          </div>
+          <p className={'booking-error mono' + (error ? ' show' : '')} role="alert">{error}</p>
+          <div className="booking-nav">
+            <button type="button" className="btn btn-outline" disabled={busy} onClick={reset}>Use a different email</button>
+            <span>
+              <button type="button" className="btn btn-outline" disabled={busy} onClick={function () { sendCode(); }} style={{ marginRight: '8px' }}>Resend Code</button>
+              <button type="submit" className="btn btn-yellow" disabled={busy}>{busy ? 'Confirming...' : 'Confirm Email'}</button>
+            </span>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
@@ -252,10 +394,12 @@ function AccountForm({ customer }) {
   var [lastName, setLastName] = useState(customer.lastName);
   var [error, setError] = useState(false);
   var [saved, setSaved] = useState(false);
+  var [saveFailed, setSaveFailed] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setSaved(false);
+    setSaveFailed(false);
 
     if (!isValidName(firstName) || !isValidName(lastName)) {
       setError(true);
@@ -265,7 +409,8 @@ function AccountForm({ customer }) {
 
     var f = normalizeName(firstName);
     var l = normalizeName(lastName);
-    updateCustomerProfile(f, l);
+    var ok = await updateCustomerProfile(f, l);
+    if (!ok) { setSaveFailed(true); return; }
     setFirstName(f);
     setLastName(l);
     setSaved(true);
@@ -313,7 +458,8 @@ function AccountForm({ customer }) {
             </div>
 
             <p className={'booking-error mono' + (error ? ' show' : '')}>{NAME_MESSAGE}</p>
-            {saved && <p className="field-hint mono" role="status" style={{ color: 'var(--green)' }}>Saved on this browser (demo storage, no backend yet).</p>}
+            {saved && <p className="field-hint mono" role="status" style={{ color: 'var(--green)' }}>{API.PROFILE ? 'Saved.' : 'Saved on this browser (demo storage, no backend yet).'}</p>}
+            {saveFailed && <p className="booking-error mono show" role="alert">Could not save your changes. Try again.</p>}
 
             <div className="booking-nav">
               <span></span>
@@ -321,6 +467,8 @@ function AccountForm({ customer }) {
             </div>
           </form>
         </div>
+
+        <ChangeEmail customer={customer} />
 
         <ChangePassword />
 

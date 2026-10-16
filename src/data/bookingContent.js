@@ -8,9 +8,7 @@ export var vehicleOptions = [
 
 export var payOptions = ['GCash', 'Maya', 'Cash'];
 
-// Existing requirements never make vehicle type change a price (totals are
-// service base price + add-ons only), so the copy says so instead of implying
-// the job is priced per vehicle.
-export var vehicleStepSub = "Tell us if it's a sedan, SUV, or motorcycle so we know what's rolling in. Vehicle type doesn't change the starting prices shown.";
+// Only Car Wash is priced by vehicle type; every other service has one price.
+export var vehicleStepSub = "Tell us if it's a sedan, SUV, or motorcycle so we know what's rolling in. Car Wash is priced by vehicle type; other services aren't.";
 
 export var pricingNote = 'Prices shown are starting prices. The final amount is on your invoice before work begins.';
